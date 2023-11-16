@@ -9,17 +9,16 @@ import {
   Image,
 } from "react-native";
 import { Link, Stack, useRouter } from "expo-router";
-import { XCircleIcon } from "react-native-heroicons/solid";
+import { ArrowLeftIcon } from "react-native-heroicons/solid";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  removeFromCart,
+  completeOrder,
   selectCartItems,
   selectCartTotal,
-  setOrder,
 } from "./redux/slices/cartSlice";
 import { urlFor } from "../sanity";
 
-const CartItemScreen = () => {
+const OrderControlScreen = () => {
   const router = useRouter();
   const items = useSelector(selectCartItems);
   const cartTotal = useSelector(selectCartTotal);
@@ -34,41 +33,35 @@ const CartItemScreen = () => {
     setGroupedCartItems(groupedItems);
   }, [items]);
 
-  const placeOrder = () => {
+  const orderSuccessfull = () => {
     if (items.length === 0) {
       alert("Add atleast one item in the Cart");
     } else {
-      dispatch(setOrder({ items: groupedCartItems, status: "processing" }));
-      router.replace("/orderProcess");
+      dispatch(completeOrder({ status: "completed" }));
+      alert("Order Completed!");
+      router.push("/");
     }
   };
 
   return (
     <SafeAreaView className="bg-white">
       <View className="bg-white h-full">
-        <View className="bg-white p-6 border-b-4 border-gray-100 shadow-sm mt-10">
+        <View className="bg-white p-6 items-center justify-center">
           <View>
-            <Text className="text-xl font-bold text-center">Cart</Text>
-            {/* <Text>{restaurant?.title}</Text> */}
+            <Text className="text-xl font-bold text-center">Order Status</Text>
           </View>
-
-          <Link href="../" className="rounded-full absolute top-3 right-5">
-            <XCircleIcon size={50} color="#00CCBB" />
-          </Link>
-        </View>
-
-        <View className="flex-row items-center space-x-4 px-4 py-3 bg-white my-5">
-          <Image
-            source={{ uri: "https://links.papareact.com/wru" }}
-            className="h-7 w-7 bg-gray-300 p-4 rounded-full"
-          />
-          <Text className="flex-1">Deliver in 50-54 mins</Text>
-          <TouchableOpacity>
-            <Text className="text-primary_btn_color">Change </Text>
+          <TouchableOpacity
+            onPress={router.back}
+            className="absolute left-5 p-2"
+          >
+            <ArrowLeftIcon size={20} color="#00CCBB" />
           </TouchableOpacity>
         </View>
 
         <ScrollView className="divide-y divide-gray-200">
+          <View className="m-7">
+            <Text className="font-bold">Order Items</Text>
+          </View>
           {Object.entries(groupedCartItems).map(([key, items]) => (
             <View
               key={key}
@@ -82,11 +75,6 @@ const CartItemScreen = () => {
 
               <Text className="flex-1">{items[0]?.name}</Text>
               <Text className="text-gray-600">$ {items[0]?.price} </Text>
-              <TouchableOpacity
-                onPress={() => dispatch(removeFromCart({ id: key }))}
-              >
-                <Text className="text-primary_btn_color text-xs">Remove</Text>
-              </TouchableOpacity>
             </View>
           ))}
         </ScrollView>
@@ -110,10 +98,10 @@ const CartItemScreen = () => {
 
           <TouchableOpacity
             className="bg-primary_btn_color rounded-lg p-4"
-            onPress={() => placeOrder()}
+            onPress={() => orderSuccessfull()}
           >
             <Text className="text-white text-center text-lg font-bold">
-              Place Order
+              Order Completed
             </Text>
           </TouchableOpacity>
         </View>
@@ -122,4 +110,4 @@ const CartItemScreen = () => {
   );
 };
 
-export default CartItemScreen;
+export default OrderControlScreen;

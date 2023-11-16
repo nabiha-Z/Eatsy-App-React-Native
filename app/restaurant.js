@@ -38,7 +38,7 @@ const RestaurantScreen = () => {
         <View className="relative">
           <Image
             source={{
-              uri: urlFor( parsedImgUrl).url(),
+              uri: urlFor(parsedImgUrl).url(),
             }}
             className="w-full h-56 bg-gray-200 p-4"
           />

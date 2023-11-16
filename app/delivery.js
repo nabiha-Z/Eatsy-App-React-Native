@@ -9,8 +9,8 @@ import {
   ActivityIndicator,
   Platform,
 } from "react-native";
-// import MapView, { Marker } from "react-native-maps";
-import { Link } from "expo-router";
+import MapView, { Marker } from "react-native-maps";
+import { Link, useRouter } from "expo-router";
 import { XMarkIcon } from "react-native-heroicons/solid";
 import * as Location from "expo-location";
 
@@ -19,6 +19,7 @@ const DeliveryScreen = () => {
   const [errorMsg, setErrorMsg] = useState(null);
   const [Dlatitude, setLatitude] = useState(33.65086);
   const [Dlongitude, setLongitude] = useState(73.034585);
+  const router = useRouter();
 
   const fetchLocation = async () => {
     try {
@@ -51,9 +52,12 @@ const DeliveryScreen = () => {
             Platform.OS !== "ios" && "mt-7"
           }`}
         >
-          <Link href="/">
+          {/* <Link href="../">
             <XMarkIcon color="white" size={30} />
-          </Link>
+          </Link> */}
+          <TouchableOpacity onPress={() => router.replace("/")}>
+            <XMarkIcon color="white" size={30} />
+          </TouchableOpacity>
           <Text className="font-light text-white text-lg">Order Help</Text>
         </View>
 
@@ -74,7 +78,7 @@ const DeliveryScreen = () => {
           </Text>
         </View>
       </SafeAreaView>
-      {/* {Dlatitude === null ? (
+      {Dlatitude === null ? (
         <ActivityIndicator size="small" color="#0000ff" />
       ) : (
         <MapView
@@ -94,7 +98,7 @@ const DeliveryScreen = () => {
             description={"description"}
           />
         </MapView>
-      )} */}
+      )}
     </View>
   );
 };

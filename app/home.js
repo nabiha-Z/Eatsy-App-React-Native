@@ -8,6 +8,7 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  Dimensions,
 } from "react-native";
 import {
   AdjustmentsVerticalIcon,
@@ -15,16 +16,25 @@ import {
   MagnifyingGlassIcon,
   UserIcon,
   ShoppingCartIcon,
+  QueueListIcon,
+  TruckIcon,
 } from "react-native-heroicons/outline";
+import { createShimmerPlaceholder } from "react-native-shimmer-placeholder";
+import LinearGradient from "expo-linear-gradient";
 import { Link, Stack, useRouter } from "expo-router";
 
-import { Categories } from "./components/Categories/categories";
+import { Categories } from "./components/Banner/banner";
 import { FeaturedRow } from "./components/Featured/FeaturedRow";
 import sanityClient from "../sanity";
+import { useSelector } from "react-redux";
 
 export default function Home() {
+  const orderStatus = useSelector((state) => state.status);
   const [featuredCategories, setFeaturedCategories] = useState([]);
   const router = useRouter();
+  const windowHeight = Dimensions.get("window").height;
+
+  const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
   useEffect(() => {
     sanityClient
@@ -75,16 +85,35 @@ export default function Home() {
 
       <View className="flex-row items-center m-5 space-x-2">
         <View className="flex-row items-center">
-          <MagnifyingGlassIcon color="gray" size={20} className="absolute" />
+          <MagnifyingGlassIcon
+            color="gray"
+            size={20}
+            className="absolute z-20"
+          />
+
           <TextInput
             className="bg-slate-100 w-4/5 p-3"
             placeholder="Restaurants and Cuisines"
             keyboardType="default"
           />
         </View>
-        <AdjustmentsVerticalIcon color="#00CCBB" size={20} />
+        {orderStatus !== null ? (
+          <Link href="/orderControl" className="pointer">
+            <TruckIcon color="#00CCBB" size={25} />
+          </Link>
+        ) : (
+          <AdjustmentsVerticalIcon color="#00CCBB" size={20} />
+        )}
       </View>
-
+      {orderStatus === "processing" && (
+        <TouchableOpacity
+          className={`bg-primary_btn_color w-4/5 absolute z-10  p-4 rounded-lg self-center`}
+          style={{ top: windowHeight * 0.9 }}
+          onPress={() => router.push("/delivery")}
+        >
+          <Text className="text-white text-center font-bold">Track Order</Text>
+        </TouchableOpacity>
+      )}
       <ScrollView
         className="bg-[#F7F8F9] pl-5 py-5"
         contentContainerStyle={{ paddingBottom: 170 }}

@@ -3,6 +3,9 @@ import { createSelector } from "@reduxjs/toolkit";
 
 const initialState = {
   cart_items: [],
+  status: null,
+  order_items: [],
+  history: [],
 };
 
 const cartSlice = createSlice({
@@ -28,10 +31,22 @@ const cartSlice = createSlice({
       }
       state.cart_items = new_cart;
     },
+    setOrder: (state, action) => {
+      state.order_items = action.payload.items;
+      state.status = action.payload.status;
+    },
+
+    completeOrder: (state, action) => {
+      state.history.push(state.order_items);
+      state.status = action.payload.status;
+      state.cart_items = [];
+      console.log("eee: ", state.history);
+    },
   },
 });
 
-export const { addToCart, removeFromCart } = cartSlice.actions;
+export const { addToCart, removeFromCart, setOrder, completeOrder } =
+  cartSlice.actions;
 export const selectCartItems = (state) => state?.cart_items || 0;
 
 const selectCartItemsById = (state, id) =>

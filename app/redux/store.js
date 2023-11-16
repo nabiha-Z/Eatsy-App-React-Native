@@ -13,14 +13,9 @@ const persistConfig = {
 const persistedReducer = persistReducer(persistConfig, cartReducer);
 
 export const store = configureStore({
-  // reducer: persistedReducer,
-  reducer: cartReducer
-  // reducer: {
-  //   cart: cartReducer,
-  //   restaurant: restaurantReducer,
-  // },
-  // devTools: process.env.NODE_ENV !== "production",
-  // middleware: [thunk],
+  reducer: persistedReducer,
+  devTools: process.env.NODE_ENV !== "production",
+  middleware: [thunk],
 });
 
 export const persistor = store;
