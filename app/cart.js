@@ -38,6 +38,52 @@ const CartItemScreen = () => {
     if (items.length === 0) {
       alert("Add atleast one item in the Cart");
     } else {
+      // const handleSubmit = async (event) => {
+      //   event.preventDefault();
+    
+      //   if (!stripe || !elements) {
+      //     // Stripe is not yet loaded
+      //     return;
+      //   }
+    
+      //   // Create a payment method using the card element
+      //   const result = await stripe.createPaymentMethod({
+      //     type: "card",
+      //     card: elements.getElement(CardElement),
+      //   });
+    
+      //   if (result.error) {
+      //     // Handle payment method creation error
+      //   } else {
+      //     // Payment method created successfully, now confirm the payment
+      //     const paymentIntentResponse = await axios.post(
+      //       "http://localhost:5000/create-payment-intent",
+      //       {
+      //         amount: 1000, // Replace with the actual amount
+      //         currency: "usd", // Replace with the desired currency
+      //         paymentMethodId: result.paymentMethod,
+      //       }
+      //     );
+    
+      //     const { clientSecret } = paymentIntentResponse.data;
+    
+      //     const confirmPayment = await stripe.confirmCardPayment(clientSecret, {
+      //       payment_method: {
+      //         card: elements.getElement(CardElement),
+      //       },
+      //       return_url: window.location.origin + "/confirm",
+      //     });
+    
+      //     if (confirmPayment.error) {
+      //       console.log("error: ", confirmPayment.error);
+      //       console.error(confirmPayment.error.message);
+      //     } else {
+      //       // Payment confirmed successfully
+      //       console.log("Payment successful!");
+      //       router.push("/confirm");
+      //     }
+      //   }
+      // };
       dispatch(setOrder({ items: groupedCartItems, status: "processing" }));
       router.replace("/orderProcess");
     }

@@ -23,13 +23,16 @@ import { createShimmerPlaceholder } from "react-native-shimmer-placeholder";
 import LinearGradient from "expo-linear-gradient";
 import { Link, Stack, useRouter } from "expo-router";
 
-import { Categories } from "./components/Banner/banner";
+import { Banner } from "./components/Banner/banner";
 import { FeaturedRow } from "./components/Featured/FeaturedRow";
 import sanityClient from "../sanity";
 import { useSelector } from "react-redux";
 
+import { selectCartItems } from "./redux/slices/cartSlice";
+
 export default function Home() {
   const orderStatus = useSelector((state) => state.status);
+  const items = useSelector(selectCartItems);
   const [featuredCategories, setFeaturedCategories] = useState([]);
   const router = useRouter();
   const windowHeight = Dimensions.get("window").height;
@@ -78,31 +81,52 @@ export default function Home() {
             <ChevronDownIcon color="#00CCBB" size={20} />
           </Text>
         </View>
-        <Link href="/cart">
+        <TouchableOpacity className="" onPress={() => router.push("/cart")}>
+          <View
+            className="bg-blue-500 w-6 h-6 p-1 rounded-full items-center absolute
+          z-20 mt-[-6px] ml-[-5px]"
+          >
+            <Text className="text-white text-[13px] font-bold">
+              {items.length}
+            </Text>
+          </View>
           <ShoppingCartIcon color="#00CCBB" size={35} />
-        </Link>
+        </TouchableOpacity>
       </View>
 
       <View className="flex-row items-center m-5 space-x-2">
         <View className="flex-row items-center">
-          <MagnifyingGlassIcon
-            color="gray"
-            size={20}
-            className="absolute z-20"
-          />
-
           <TextInput
-            className="bg-slate-100 w-4/5 p-3"
+            className="bg-slate-100 w-[320px] p-3"
             placeholder="Restaurants and Cuisines"
             keyboardType="default"
           />
+          <View
+            className=" absolute justify-end items-end
+          z-20 mt-[-10px] ml-72"
+          >
+            <MagnifyingGlassIcon
+              color="gray"
+              size={25}
+              className=""
+            />
+          </View>
         </View>
-        {orderStatus !== null ? (
-          <Link href="/orderControl" className="pointer">
-            <TruckIcon color="#00CCBB" size={25} />
-          </Link>
+        {orderStatus === "processing" ? (
+          <TouchableOpacity
+            className=""
+            onPress={() => router.push("/orderControl")}
+          >
+            <View
+              className="bg-red-300 w-5 h-5 p-1 rounded-full items-center absolute
+          z-20 mt-[-6px] ml-[-5px]"
+            >
+              <Text className="text-white text-[13px] font-bold">1</Text>
+            </View>
+            <TruckIcon color="#00CCBB" size={29} />
+          </TouchableOpacity>
         ) : (
-          <AdjustmentsVerticalIcon color="#00CCBB" size={20} />
+          <AdjustmentsVerticalIcon color="#00CCBB" size={25} />
         )}
       </View>
       {orderStatus === "processing" && (
@@ -118,8 +142,7 @@ export default function Home() {
         className="bg-[#F7F8F9] pl-5 py-5"
         contentContainerStyle={{ paddingBottom: 170 }}
       >
-        {/* Categories */}
-        <Categories />
+        <Banner />
 
         {/* Featured List */}
         {featuredCategories?.map((category) => (
